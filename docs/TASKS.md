@@ -16,44 +16,21 @@ Track build progress here. Check off each item as it is completed.
 
 ## 2. Supabase Setup
 
-- [ ] Create Supabase project
-- [ ] Configure Supabase Auth (email/password)
-- [ ] Create database schema:
-  - [ ] `users` — id, email, full_name, cadre, ward, facility_id, role
-  - [ ] `facilities` — id, name, state, lga
-  - [ ] `competencies` — id, title, description, validity_months, estimated_minutes
-  - [ ] `worker_competencies` — id, user_id, competency_id, status, completed_at, expires_at
-  - [ ] `module_sections` — id, competency_id, title, body, order
-  - [ ] `assessment_questions` — id, competency_id, question, options (jsonb), correct_index, order
-  - [ ] `assessment_attempts` — id, user_id, competency_id, score, passed, taken_at
-- [ ] Set row-level security policies (workers see only their own records; admin sees facility)
-- [ ] Add Supabase client to `/lib/supabase.ts`
+- [x] Create Supabase project
+- [x] Run docs/schema.sql in Supabase SQL editor
+- [x] Copy Supabase URL + anon key into .env.local
+- [x] Add Supabase client to `/lib/supabase/` (client.ts + server.ts)
 
 ---
 
 ## 3. Seed Data
 
-- [ ] Seed facility: Federal Medical Centre, Asaba, Delta State
-- [ ] Seed 6 competencies:
-  - [ ] Basic Life Support (BLS) — Theory
-  - [ ] Infection Prevention and Control
-  - [ ] Safeguarding Awareness
-  - [ ] Medicines Management — Fundamentals
-  - [ ] Health and Safety Awareness
-  - [ ] Manual Handling — Theory
-- [ ] Seed demo worker account: Adaeze Okonkwo (Registered Nurse, Medical Ward B)
-  - [ ] 3 competencies complete, 1 overdue (BLS), 2 not started
-- [ ] Seed 15–20 staff members across Registered Nurse, Midwife, and CHEW cadres
-  - [ ] Mix of Igbo, Yoruba, and Hausa names
-  - [ ] BLS and Infection Control have the most gaps across staff
-  - [ ] At least 2–3 workers fully compliant
-- [ ] Seed BLS Theory module content (5 sections):
-  - [ ] Section 1 — Chain of Survival
-  - [ ] Section 2 — Scene Safety and Initial Assessment
-  - [ ] Section 3 — Chest Compressions (rate, depth, ratio)
-  - [ ] Section 4 — Airway Management and Rescue Breaths
-  - [ ] Section 5 — AED Use and Handover
-- [ ] Seed BLS Theory assessment questions (5–10 multiple choice)
+- [x] Seed facility: Federal Medical Centre, Asaba, Delta State
+- [x] Seed 6 competencies
+- [x] Seed demo worker account: Adaeze Okonkwo (Registered Nurse, Medical Ward B)
+- [x] Seed 20 staff members across Registered Nurse, Midwife, and CHEW cadres
+- [x] Seed BLS Theory module content (5 sections)
+- [x] Seed BLS Theory assessment questions (7 multiple choice)
 
 ---
 
