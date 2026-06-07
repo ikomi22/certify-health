@@ -3,6 +3,7 @@
 import { useState } from "react"
 import Link from "next/link"
 import type { AssessmentQuestion } from "@/lib/module"
+import type { ModuleIntro } from "@/lib/module-content"
 
 const PASS_THRESHOLD = 80
 
@@ -17,8 +18,7 @@ type Props = {
     validity_months: number
   }
   questions: AssessmentQuestion[]
-  videoId?: string | null
-  moduleIntro?: { objectives: string[]; why_matters: string; explanations: Record<number, string> } | null
+  moduleIntro?: ModuleIntro | null
   sections?: import("@/lib/module").ModuleSection[]
   workerName?: string
   facilityName?: string
@@ -30,8 +30,7 @@ type Props = {
   ) => Promise<void>
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function ModuleView({ competency, questions, videoId, onRecordAttempt, ..._ }: Props) {
+export function ModuleView({ competency, questions, onRecordAttempt }: Props) {
   const [phase, setPhase] = useState<Phase>("video")
   const [currentQ, setCurrentQ] = useState(0)
   const [answers, setAnswers] = useState<number[]>([])
@@ -92,21 +91,9 @@ export function ModuleView({ competency, questions, videoId, onRecordAttempt, ..
         {phase === "video" && (
           <>
             <div className="bg-white rounded-xl shadow-sm overflow-hidden">
-              {videoId ? (
-                <div className="relative" style={{ paddingBottom: "56.25%" }}>
-                  <iframe
-                    src={`https://www.youtube.com/embed/${videoId}`}
-                    title={competency.title}
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                    className="absolute inset-0 w-full h-full"
-                  />
-                </div>
-              ) : (
-                <div className="flex items-center justify-center bg-gray-100 text-gray-400 text-sm" style={{ minHeight: 220 }}>
-                  Video content coming soon
-                </div>
-              )}
+              <div className="flex items-center justify-center bg-gray-100 text-gray-400 text-sm" style={{ minHeight: 220 }}>
+                Video content coming soon
+              </div>
             </div>
 
             {competency.description && (

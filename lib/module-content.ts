@@ -1,4 +1,4 @@
-type ModuleIntro = {
+export type ModuleIntro = {
   objectives: string[]
   why_matters: string
   explanations: Record<number, string>
