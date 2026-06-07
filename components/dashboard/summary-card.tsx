@@ -11,7 +11,7 @@ export function SummaryCard({ competencies }: Props) {
   const notStarted = competencies.filter((c) => c.status === "not_started").length
 
   return (
-    <div className="rounded-xl p-5 text-white" style={{ background: "linear-gradient(135deg, #16a34a 0%, #052e16 100%)" }}>
+    <div className="rounded-xl p-5 text-white bg-gradient-to-br from-green-600 to-green-950">
       <p className="text-green-200 text-sm mb-1">Competency overview</p>
       <p className="text-2xl font-bold mb-4">
         {complete} of {total} complete
