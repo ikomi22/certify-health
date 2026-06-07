@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation"
 export function RoleNav() {
   const pathname = usePathname()
   const onDashboard = pathname === "/dashboard"
+  const onFacility = pathname === "/facility"
 
   return (
     <div className="flex rounded-lg border border-white/20 overflow-hidden text-xs">
@@ -19,7 +20,7 @@ export function RoleNav() {
       <Link
         href="/facility"
         className={`px-3 py-1.5 transition-colors ${
-          !onDashboard ? "bg-white/20 text-white font-medium" : "text-white/60 hover:text-white"
+          onFacility ? "bg-white/20 text-white font-medium" : "text-white/60 hover:text-white"
         }`}
       >
         Facility Overview

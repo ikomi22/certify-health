@@ -91,7 +91,12 @@ export function FacilityDashboard({ data }: Props) {
       <header className="bg-green-950 text-white px-4 py-5">
         <div className="flex items-center justify-between mb-1">
           <p className="text-xs text-green-400 font-medium uppercase tracking-wider">Facility Dashboard</p>
-          <RoleNav />
+          <div className="flex items-center gap-3">
+            <span className="text-white font-bold text-sm tracking-tight hidden sm:block">
+              Certify <span className="text-[#4ade80]">Health</span>
+            </span>
+            <RoleNav />
+          </div>
         </div>
         <h1 className="text-lg font-bold leading-snug">{data.facility_name}</h1>
       </header>
