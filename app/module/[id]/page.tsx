@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation"
 import { createClient } from "@/lib/supabase/server"
 import { getModuleData } from "@/lib/module"
-import { getVideoId } from "@/lib/module-videos"
+import { getModuleIntro } from "@/lib/module-content"
 import { ModuleView } from "@/components/module/module-view"
 import { recordAttempt } from "./actions"
 
@@ -12,16 +12,29 @@ export default async function ModulePage({ params }: Props) {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect("/login")
 
-  const moduleData = await getModuleData(params.id)
+  const [moduleData, profileResult] = await Promise.all([
+    getModuleData(params.id),
+    supabase
+      .from("profiles")
+      .select("full_name, facilities(name)")
+      .eq("id", user.id)
+      .single(),
+  ])
+
   if (!moduleData) redirect("/dashboard")
 
-  const videoId = getVideoId(moduleData.competency.title)
+  const moduleIntro = getModuleIntro(moduleData.competency.title)
+  const workerName = profileResult.data?.full_name ?? ""
+  const facilityName = (profileResult.data?.facilities as unknown as { name: string } | null)?.name ?? ""
 
   return (
     <ModuleView
       competency={moduleData.competency}
+      sections={moduleData.sections}
       questions={moduleData.questions}
-      videoId={videoId}
+      moduleIntro={moduleIntro}
+      workerName={workerName}
+      facilityName={facilityName}
       onRecordAttempt={recordAttempt}
     />
   )

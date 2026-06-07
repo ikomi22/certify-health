@@ -8,6 +8,13 @@ export type AssessmentQuestion = {
   question_order: number
 }
 
+export type ModuleSection = {
+  id: string
+  section_order: number
+  title: string
+  body: string
+}
+
 export type ModuleData = {
   competency: {
     id: string
@@ -16,18 +23,24 @@ export type ModuleData = {
     description: string | null
     validity_months: number
   }
+  sections: ModuleSection[]
   questions: AssessmentQuestion[]
 }
 
 export async function getModuleData(competencyId: string): Promise<ModuleData | null> {
   const supabase = createClient()
 
-  const [compResult, questionsResult] = await Promise.all([
+  const [compResult, sectionsResult, questionsResult] = await Promise.all([
     supabase
       .from("competencies")
       .select("id, title, estimated_minutes, description, validity_months")
       .eq("id", competencyId)
       .single(),
+    supabase
+      .from("module_sections")
+      .select("id, section_order, title, body")
+      .eq("competency_id", competencyId)
+      .order("section_order"),
     supabase
       .from("assessment_questions")
       .select("id, question, options, correct_index, question_order")
@@ -39,6 +52,7 @@ export async function getModuleData(competencyId: string): Promise<ModuleData | 
 
   return {
     competency: compResult.data,
+    sections: (sectionsResult.data ?? []) as ModuleSection[],
     questions: (questionsResult.data ?? []) as AssessmentQuestion[],
   }
 }

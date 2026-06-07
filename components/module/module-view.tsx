@@ -17,7 +17,11 @@ type Props = {
     validity_months: number
   }
   questions: AssessmentQuestion[]
-  videoId: string | null
+  videoId?: string | null
+  moduleIntro?: { objectives: string[]; why_matters: string; explanations: Record<number, string> } | null
+  sections?: import("@/lib/module").ModuleSection[]
+  workerName?: string
+  facilityName?: string
   onRecordAttempt: (
     competencyId: string,
     validityMonths: number,
@@ -26,7 +30,8 @@ type Props = {
   ) => Promise<void>
 }
 
-export function ModuleView({ competency, questions, videoId, onRecordAttempt }: Props) {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function ModuleView({ competency, questions, videoId, onRecordAttempt, ..._ }: Props) {
   const [phase, setPhase] = useState<Phase>("video")
   const [currentQ, setCurrentQ] = useState(0)
   const [answers, setAnswers] = useState<number[]>([])
