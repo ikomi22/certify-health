@@ -29,7 +29,7 @@ export function OverdueBanner({ overdueCount, expiringSoonCount }: Props) {
         </p>
         <p className={`text-xs mt-0.5 ${isOverdue ? "text-red-600" : "text-amber-600"}`}>
           {isOverdue
-            ? "Complete them now to stay compliant. A reminder has been sent to your email."
+            ? "Complete this now to stay compliant."
             : "Renew now to avoid a gap in your competency record."}
         </p>
       </div>

@@ -34,12 +34,14 @@ export default function LoginPage() {
     <main className="min-h-screen bg-[#052e16] flex flex-col items-center justify-center px-4 py-12">
       {/* Branding */}
       <div className="mb-8 text-center">
-        <div className="w-14 h-14 bg-brand rounded-xl mx-auto mb-3 flex items-center justify-center shadow-[0_0_0_4px_rgba(22,163,74,0.2)]">
-          <div className="w-7 h-7 bg-white rounded-md" />
+        <div className="mb-1">
+          <span className="text-white font-extrabold text-3xl tracking-tight leading-none">
+            Certify
+          </span>
+          <span className="text-[#4ade80] font-extrabold text-3xl tracking-tight leading-none ml-1.5">
+            Health
+          </span>
         </div>
-        <h1 className="text-white font-bold text-xl tracking-tight">
-          Certify Health
-        </h1>
         <p className="text-[#4ade80] text-sm mt-1">
           Federal Medical Centre, Asaba
         </p>

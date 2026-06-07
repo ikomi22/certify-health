@@ -10,6 +10,20 @@ const RAG: Record<CompetencyStatus, { dot: string; label: string }> = {
   not_started: { dot: "bg-gray-300",   label: "Not Started" },
 }
 
+const SHORT_CODE: Record<string, string> = {
+  "Basic Life Support (BLS) — Theory": "BLS",
+  "Infection Prevention and Control":   "IPC",
+  "Safeguarding Awareness":             "SGA",
+  "Medicines Management — Fundamentals":"MMF",
+  "Health and Safety Awareness":        "HSA",
+  "Manual Handling — Theory":           "MHT",
+  "Cardiopulmonary Resuscitation (CPR) — Practical Preparation": "CPR",
+}
+
+function shortCode(title: string) {
+  return SHORT_CODE[title] ?? title.slice(0, 3).toUpperCase()
+}
+
 const CADRES = ["All", "Registered Nurse", "Midwife", "CHEW"] as const
 type CadreFilter = typeof CADRES[number]
 
@@ -170,7 +184,7 @@ export function FacilityDashboard({ data }: Props) {
                   <th className="text-left px-3 py-2.5 font-medium text-gray-500 whitespace-nowrap">Cadre</th>
                   {data.competencies.map((c) => (
                     <th key={c.id} className="px-3 py-2.5 font-medium text-gray-500 whitespace-nowrap text-center" title={c.title}>
-                      {c.title.split(" ")[0]}
+                      {shortCode(c.title)}
                     </th>
                   ))}
                 </tr>
@@ -210,12 +224,20 @@ export function FacilityDashboard({ data }: Props) {
         </div>
 
         {/* Legend */}
-        <div className="flex items-center gap-4 text-xs text-gray-400 px-1">
+        {/* RAG legend */}
+        <div className="flex items-center gap-4 text-xs text-gray-400 px-1 flex-wrap">
           {Object.entries(RAG).map(([, v]) => (
             <span key={v.label} className="flex items-center gap-1.5">
               <span className={`w-2.5 h-2.5 rounded-full inline-block ${v.dot}`} />
               {v.label}
             </span>
+          ))}
+        </div>
+
+        {/* Short code legend */}
+        <div className="flex items-center gap-x-4 gap-y-1 text-xs text-gray-400 px-1 flex-wrap mt-2">
+          {Object.entries(SHORT_CODE).map(([title, code]) => (
+            <span key={code}><span className="font-medium text-gray-500">{code}</span> — {title}</span>
           ))}
         </div>
 

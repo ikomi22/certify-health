@@ -25,7 +25,9 @@ export default async function DashboardPage() {
     <div className="min-h-screen bg-gray-50">
       {/* Top bar */}
       <header className="bg-green-950 px-4 py-3 flex items-center justify-between">
-        <span className="text-white font-bold text-base tracking-tight">Certify Health</span>
+        <span className="text-white font-bold text-base tracking-tight">
+          Certify <span className="text-[#4ade80]">Health</span>
+        </span>
         <div className="flex items-center gap-3">
           <span className="text-white/70 text-xs hidden sm:block">{profile.full_name}</span>
           <form action={signOut}>
