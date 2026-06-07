@@ -28,7 +28,7 @@ export async function signIn(
   }
 
   if (profile.role === "admin") {
-    redirect("/facility");
+    redirect("/select-role");
   }
 
   redirect("/dashboard");

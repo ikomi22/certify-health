@@ -1,7 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { createClient } from "@/lib/supabase/middleware";
 
-const PROTECTED = ["/dashboard", "/facility", "/module"];
+const PROTECTED = ["/dashboard", "/facility", "/module", "/select-role"];
 
 export async function middleware(request: NextRequest) {
   const { supabase, supabaseResponse } = createClient(request);
@@ -16,7 +16,7 @@ export async function middleware(request: NextRequest) {
   // Redirect authenticated users away from login page
   if (pathname === "/login" && user) {
     const url = request.nextUrl.clone();
-    url.pathname = "/dashboard";
+    url.pathname = "/select-role";
     return NextResponse.redirect(url);
   }
 
