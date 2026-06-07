@@ -403,7 +403,7 @@ async function seed() {
           expires_at: rec.expires_at ?? null,
         };
       })
-      .filter(Boolean);
+      .filter((x): x is NonNullable<typeof x> => x !== null);
 
     const { error: wcErr } = await supabase.from("worker_competencies").insert(wcRows);
     if (wcErr) throw new Error(`worker_competencies ${worker.email}: ${wcErr.message}`);

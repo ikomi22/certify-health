@@ -12,6 +12,14 @@ export async function middleware(request: NextRequest) {
   } = await supabase.auth.getUser();
 
   const { pathname } = request.nextUrl;
+
+  // Redirect authenticated users away from login page
+  if (pathname === "/login" && user) {
+    const url = request.nextUrl.clone();
+    url.pathname = "/dashboard";
+    return NextResponse.redirect(url);
+  }
+
   const isProtected = PROTECTED.some(
     (p) => pathname === p || pathname.startsWith(`${p}/`)
   );
