@@ -54,6 +54,7 @@ export function ModuleView({
   const [score, setScore] = useState<number | null>(null)
   const [passed, setPassed] = useState<boolean | null>(null)
   const [completionDate, setCompletionDate] = useState<string | null>(null)
+  const [expiryDate, setExpiryDate] = useState<string | null>(null)
   const [completedAnswers, setCompletedAnswers] = useState<number[]>([])
   const [submitting, setSubmitting] = useState(false)
 
@@ -66,13 +67,6 @@ export function ModuleView({
   const isCheckedCorrect = checkedAnswer !== null && question !== undefined && checkedAnswer === question.correct_index
   const isForced = attemptsOnCurrent >= 2
   const explanation = question && moduleIntro?.explanations[question.question_order]
-
-  const expiryDate =
-    completionDate
-      ? new Date(
-          new Date().setMonth(new Date().getMonth() + competency.validity_months)
-        ).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" })
-      : null
 
   function startSections() {
     setCurrentSection(0)
@@ -110,16 +104,27 @@ export function ModuleView({
         month: "long",
         year: "numeric",
       })
+      const expiryBase = new Date()
+      expiryBase.setMonth(expiryBase.getMonth() + competency.validity_months)
+      const expiryStr = expiryBase.toLocaleDateString("en-GB", {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      })
 
       setScore(pct)
       setPassed(didPass)
       setCompletionDate(dateStr)
+      setExpiryDate(expiryStr)
       setCompletedAnswers(updatedAnswers)
       setPhase("result")
 
       setSubmitting(true)
-      await onRecordAttempt(competency.id, competency.validity_months, pct, didPass)
-      setSubmitting(false)
+      try {
+        await onRecordAttempt(competency.id, competency.validity_months, pct, didPass)
+      } finally {
+        setSubmitting(false)
+      }
     } else {
       setFinalAnswers(updatedAnswers)
       setCurrentQ((q) => q + 1)
@@ -152,30 +157,32 @@ export function ModuleView({
 
   return (
     <div className="min-h-screen bg-gray-50 print:bg-white">
-      {/* Certificate — only visible when printing */}
-      <div className="hidden print:block p-12 max-w-2xl mx-auto">
-        <div className="border-4 border-green-700 p-10 text-center space-y-6">
-          <div>
-            <span className="font-extrabold text-3xl text-green-900 tracking-tight">Certify</span>
-            <span className="font-extrabold text-3xl text-green-600 tracking-tight ml-1.5">Health</span>
-          </div>
-          <p className="text-sm text-gray-500 uppercase tracking-widest">Certificate of Competency</p>
-          <p className="text-xl font-semibold text-gray-900">{workerName}</p>
-          <p className="text-sm text-gray-500">has successfully completed</p>
-          <p className="text-lg font-bold text-green-800">{competency.title}</p>
-          <p className="text-sm text-gray-500">{facilityName}</p>
-          <div className="flex justify-center gap-12 pt-4 text-sm text-gray-600">
+      {/* Certificate — only visible when printing, only rendered when passed */}
+      {passed === true && (
+        <div className="hidden print:block p-12 max-w-2xl mx-auto">
+          <div className="border-4 border-green-700 p-10 text-center space-y-6">
             <div>
-              <p className="font-medium">Completed</p>
-              <p>{completionDate}</p>
+              <span className="font-extrabold text-3xl text-green-900 tracking-tight">Certify</span>
+              <span className="font-extrabold text-3xl text-green-600 tracking-tight ml-1.5">Health</span>
             </div>
-            <div>
-              <p className="font-medium">Valid until</p>
-              <p>{expiryDate}</p>
+            <p className="text-sm text-gray-500 uppercase tracking-widest">Certificate of Competency</p>
+            <p className="text-xl font-semibold text-gray-900">{workerName}</p>
+            <p className="text-sm text-gray-500">has successfully completed</p>
+            <p className="text-lg font-bold text-green-800">{competency.title}</p>
+            <p className="text-sm text-gray-500">{facilityName}</p>
+            <div className="flex justify-center gap-12 pt-4 text-sm text-gray-600">
+              <div>
+                <p className="font-medium">Completed</p>
+                <p>{completionDate}</p>
+              </div>
+              <div>
+                <p className="font-medium">Valid until</p>
+                <p>{expiryDate}</p>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      )}
 
       {/* Normal UI — hidden when printing */}
       <div className="print:hidden">
