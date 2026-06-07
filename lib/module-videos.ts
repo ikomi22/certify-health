@@ -8,6 +8,7 @@ const VIDEO_IDS: Record<string, string> = {
   "Medicines Management — Fundamentals": "zrOO00jLUHM",
   "Health and Safety Awareness": "S_GF3Kf3Nrs",
   "Manual Handling — Theory": "F_pSRZemyjw",
+  "Cardiopulmonary Resuscitation (CPR) — Practical": "Plse2FOkV4Q",
 }
 
 export function getVideoId(competencyTitle: string): string | null {
