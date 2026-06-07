@@ -28,11 +28,11 @@ function dateLine(c: WorkerCompetency): string {
     const exp = c.expires_at ? ` · Expires ${formatDate(c.expires_at)}` : ""
     return `Completed ${formatDate(c.completed_at)}${exp}`
   }
-  if (c.status === "overdue" && c.expires_at) {
-    return `Expired ${formatDate(c.expires_at)}`
+  if (c.status === "overdue") {
+    return c.expires_at ? `Expired ${formatDate(c.expires_at)}` : "Expired"
   }
-  if (c.status === "in_progress" && c.expires_at) {
-    return `Expires ${formatDate(c.expires_at)}`
+  if (c.status === "in_progress") {
+    return c.expires_at ? `Expires ${formatDate(c.expires_at)}` : "In progress"
   }
   return "Not yet started"
 }
