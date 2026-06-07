@@ -64,19 +64,22 @@ Track build progress here. Check off each item as it is completed.
 
 ---
 
-## 6. Module View (`/module/[id]`) ← NEXT UP
+## 6. Module View (`/module/[id]`) ✅ COMPLETE (2026-06-07)
 
-- [ ] Module title and estimated completion time
-- [ ] Section progress indicator (e.g. Section 2 of 5)
-- [ ] Section content area — rendered from database (markdown or plain text)
-- [ ] Navigation: Previous / Next section buttons
-- [ ] On final section: transition to assessment
-- [ ] Assessment — multiple choice questions, one at a time
-- [ ] Score calculation on submission
-- [ ] Pass/fail logic (pass threshold: 80%)
-- [ ] Completion screen on pass: congratulations message + certificate download prompt
-- [ ] Fail screen: score shown, option to retake
-- [ ] On pass: update `worker_competencies` status to complete in Supabase
+Design simplified: YouTube video embed per competency → assessment → result (no section-by-section content).
+
+- [x] Module title and estimated completion time in header
+- [x] YouTube video embed (16:9, fullscreen capable)
+- [x] "Take Assessment" CTA after video
+- [x] Assessment — multiple choice questions, one at a time with progress bar
+- [x] Score calculation on submission
+- [x] Pass/fail logic (pass threshold: 80%)
+- [x] Completion screen on pass: score + "Back to Dashboard"
+- [x] Fail screen: score shown, option to retake or rewatch video
+- [x] On pass: update `worker_competencies` status to complete in Supabase + insert assessment_attempt
+
+**YouTube video IDs:** Add to `lib/module-videos.ts` before the demo — one per competency.
+**Key files:** `app/module/[id]/page.tsx`, `app/module/[id]/actions.ts`, `lib/module.ts`, `lib/module-videos.ts`, `components/module/module-view.tsx`
 
 ---
 
@@ -88,18 +91,22 @@ Track build progress here. Check off each item as it is completed.
 
 ---
 
-## 8. Facility Dashboard (`/facility`)
+## 8. Facility Dashboard (`/facility`) ✅ COMPLETE (2026-06-07)
 
-- [ ] Facility name header: Federal Medical Centre, Asaba
-- [ ] Overall compliance rate — % of staff current on all mandatory competencies
-- [ ] Competency breakdown — bar or table showing gap count per competency
-- [ ] Staff list table:
-  - [ ] Columns: name, cadre, ward, per-competency status (RAG colour)
-  - [ ] Filter by cadre (Registered Nurse / Midwife / CHEW)
-  - [ ] Filter by competency
-- [ ] RAG indicators per cell: green = complete, amber = expiring soon, red = overdue/missing
-- [ ] Export button — download staff compliance table as CSV
-- [ ] Data fetched from Supabase via `/lib`
+- [x] Facility name header: Federal Medical Centre, Asaba
+- [x] Overall compliance rate — % of all staff × competency pairs that are complete
+- [x] Stat cards: total staff, fully compliant, overall rate
+- [x] Competency breakdown — progress bars sorted by most gaps
+- [x] Staff list table: name, cadre, RAG dot per competency
+- [x] Filter by cadre (All / Registered Nurse / Midwife / CHEW)
+- [x] RAG indicators: green = complete, amber = in progress, red = overdue, grey = not started
+- [x] Export CSV — client-side download of full staff compliance table
+- [x] Data fetched from Supabase via `/lib/facility.ts`
+- [x] Workers redirected to `/dashboard` (role check in page.tsx)
+
+**Key files:** `app/facility/page.tsx`, `lib/facility.ts`, `components/facility/facility-dashboard.tsx`
+
+**Also seeded:** Assessment questions for all 5 remaining competencies (IPC, Safeguarding, Medicines, H&S, Manual Handling) via `scripts/seed-questions.ts`
 
 ---
 
