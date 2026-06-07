@@ -16,13 +16,18 @@ export async function signIn(
     return { error: "Invalid email or password" };
   }
 
-  const { data: profile } = await supabase
+  const { data: profile, error: profileError } = await supabase
     .from("profiles")
     .select("role")
     .eq("id", authData.user.id)
     .single();
 
-  if (profile?.role === "admin") {
+  if (profileError || !profile) {
+    await supabase.auth.signOut();
+    return { error: "Could not load your profile. Contact your administrator." };
+  }
+
+  if (profile.role === "admin") {
     redirect("/facility");
   }
 
