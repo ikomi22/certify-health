@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from "react"
 import type { FacilityData, CompetencyStatus } from "@/lib/facility"
+import { RoleNav } from "@/components/shared/role-nav"
 
 const RAG: Record<CompetencyStatus, { dot: string; label: string }> = {
   complete:    { dot: "bg-green-500",  label: "Complete" },
@@ -90,9 +91,7 @@ export function FacilityDashboard({ data }: Props) {
       <header className="bg-green-950 text-white px-4 py-5">
         <div className="flex items-center justify-between mb-1">
           <p className="text-xs text-green-400 font-medium uppercase tracking-wider">Facility Dashboard</p>
-          <span className="text-white font-bold text-sm tracking-tight">
-            Certify <span className="text-[#4ade80]">Health</span>
-          </span>
+          <RoleNav />
         </div>
         <h1 className="text-lg font-bold leading-snug">{data.facility_name}</h1>
       </header>

@@ -18,6 +18,7 @@ export type WorkerDashboardData = {
     cadre: string
     ward: string
     facility_name: string
+    role: "worker" | "admin"
   }
   competencies: WorkerCompetency[]
 }
@@ -35,7 +36,7 @@ export async function getWorkerDashboard(userId: string): Promise<WorkerDashboar
   const [profileResult, competenciesResult, wcResult] = await Promise.all([
     supabase
       .from("profiles")
-      .select("full_name, cadre, ward, facilities(name)")
+      .select("full_name, cadre, ward, role, facilities(name)")
       .eq("id", userId)
       .single(),
     supabase
@@ -83,6 +84,7 @@ export async function getWorkerDashboard(userId: string): Promise<WorkerDashboar
       cadre: profileResult.data?.cadre ?? "",
       ward: profileResult.data?.ward ?? "",
       facility_name: facilities?.name ?? "",
+      role: (profileResult.data?.role ?? "worker") as "worker" | "admin",
     },
     competencies,
   }

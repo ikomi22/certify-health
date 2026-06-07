@@ -6,6 +6,7 @@ import { CompetencyCard } from "@/components/dashboard/competency-card"
 import { OverdueBanner } from "@/components/dashboard/overdue-banner"
 import { checkAndSendOverdueReminder } from "@/lib/notifications"
 import { signOut } from "./actions"
+import { RoleNav } from "@/components/shared/role-nav"
 
 export default async function DashboardPage() {
   const supabase = createClient()
@@ -29,6 +30,7 @@ export default async function DashboardPage() {
           Certify <span className="text-[#4ade80]">Health</span>
         </span>
         <div className="flex items-center gap-3">
+          {profile.role === "admin" && <RoleNav />}
           <span className="text-white/70 text-xs hidden sm:block">{profile.full_name}</span>
           <form action={signOut}>
             <button
