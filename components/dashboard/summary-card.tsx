@@ -9,6 +9,7 @@ export function SummaryCard({ competencies }: Props) {
   const complete = competencies.filter((c) => c.status === "complete").length
   const overdue = competencies.filter((c) => c.status === "overdue").length
   const notStarted = competencies.filter((c) => c.status === "not_started").length
+  const expiringSoon = competencies.filter((c) => c.expiring_soon).length
 
   return (
     <div className="rounded-xl p-5 text-white bg-gradient-to-br from-green-600 to-green-950">
@@ -23,6 +24,11 @@ export function SummaryCard({ competencies }: Props) {
         {overdue > 0 && (
           <span className="bg-red-400/30 text-red-100 text-xs font-medium px-3 py-1 rounded-full">
             {overdue} overdue
+          </span>
+        )}
+        {expiringSoon > 0 && (
+          <span className="bg-amber-400/30 text-amber-100 text-xs font-medium px-3 py-1 rounded-full">
+            {expiringSoon} expiring soon
           </span>
         )}
         {notStarted > 0 && (

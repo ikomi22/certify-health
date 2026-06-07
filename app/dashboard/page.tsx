@@ -3,6 +3,8 @@ import { createClient } from "@/lib/supabase/server"
 import { getWorkerDashboard } from "@/lib/dashboard"
 import { SummaryCard } from "@/components/dashboard/summary-card"
 import { CompetencyCard } from "@/components/dashboard/competency-card"
+import { OverdueBanner } from "@/components/dashboard/overdue-banner"
+import { checkAndSendOverdueReminder } from "@/lib/notifications"
 import { signOut } from "./actions"
 
 export default async function DashboardPage() {
@@ -12,6 +14,12 @@ export default async function DashboardPage() {
   if (!user) redirect("/login")
 
   const { profile, competencies } = await getWorkerDashboard(user.id)
+
+  const overdueCount = competencies.filter((c) => c.status === "overdue").length
+  const expiringSoonCount = competencies.filter((c) => c.expiring_soon).length
+
+  // Fire-and-forget — never blocks render
+  checkAndSendOverdueReminder(user.id).catch(() => {})
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -41,6 +49,8 @@ export default async function DashboardPage() {
 
       {/* Main content */}
       <main className="max-w-lg mx-auto px-4 py-5 space-y-5">
+        <OverdueBanner overdueCount={overdueCount} expiringSoonCount={expiringSoonCount} />
+
         <SummaryCard competencies={competencies} />
 
         <section>

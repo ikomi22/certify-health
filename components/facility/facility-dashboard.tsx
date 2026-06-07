@@ -13,6 +13,14 @@ const RAG: Record<CompetencyStatus, { dot: string; label: string }> = {
 const CADRES = ["All", "Registered Nurse", "Midwife", "CHEW"] as const
 type CadreFilter = typeof CADRES[number]
 
+function overdueCount(s: { competencies: Record<string, CompetencyStatus> }) {
+  return Object.values(s.competencies).filter((v) => v === "overdue").length
+}
+
+function gapCount(s: { competencies: Record<string, CompetencyStatus> }) {
+  return Object.values(s.competencies).filter((v) => v !== "complete").length
+}
+
 function complianceColor(rate: number) {
   if (rate >= 80) return "text-green-600"
   if (rate >= 60) return "text-amber-500"
@@ -41,11 +49,13 @@ type Props = { data: FacilityData }
 
 export function FacilityDashboard({ data }: Props) {
   const [cadre, setCadre] = useState<CadreFilter>("All")
+  const [overdueOnly, setOverdueOnly] = useState(false)
 
-  const filtered = useMemo(
-    () => (cadre === "All" ? data.staff : data.staff.filter((s) => s.cadre === cadre)),
-    [data.staff, cadre]
-  )
+  const filtered = useMemo(() => {
+    let staff = cadre === "All" ? data.staff : data.staff.filter((s) => s.cadre === cadre)
+    if (overdueOnly) staff = staff.filter((s) => overdueCount(s) > 0)
+    return [...staff].sort((a, b) => gapCount(b) - gapCount(a))
+  }, [data.staff, cadre, overdueOnly])
 
   const gapsByComp = useMemo(() => {
     return data.competencies.map((c) => {
@@ -134,6 +144,16 @@ export function FacilityDashboard({ data }: Props) {
                 ))}
               </div>
               <button
+                onClick={() => setOverdueOnly((v) => !v)}
+                className={`text-xs px-3 py-1.5 rounded-lg border transition-colors ${
+                  overdueOnly
+                    ? "border-red-400 bg-red-50 text-red-700 font-medium"
+                    : "border-gray-200 text-gray-500 hover:bg-gray-50"
+                }`}
+              >
+                Overdue only
+              </button>
+              <button
                 onClick={() => exportCsv(data)}
                 className="text-xs px-3 py-1.5 rounded-lg border border-gray-200 text-gray-500 hover:bg-gray-50 transition-colors"
               >
@@ -158,7 +178,14 @@ export function FacilityDashboard({ data }: Props) {
               <tbody className="divide-y divide-gray-50">
                 {filtered.map((s) => (
                   <tr key={s.id} className="hover:bg-gray-50 transition-colors">
-                    <td className="px-4 py-2.5 font-medium text-gray-900 whitespace-nowrap">{s.full_name}</td>
+                    <td className="px-4 py-2.5 whitespace-nowrap">
+                      <span className="font-medium text-gray-900">{s.full_name}</span>
+                      {overdueCount(s) > 0 && (
+                        <span className="ml-2 text-xs font-medium text-red-600 bg-red-50 px-1.5 py-0.5 rounded-full">
+                          {overdueCount(s)} overdue
+                        </span>
+                      )}
+                    </td>
                     <td className="px-3 py-2.5 text-gray-500 whitespace-nowrap">{s.cadre}</td>
                     {data.competencies.map((c) => {
                       const status = s.competencies[c.id] ?? "not_started"

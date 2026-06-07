@@ -37,6 +37,15 @@ function dateLine(c: WorkerCompetency): string {
   return "Not yet started"
 }
 
+function expiringSoonLabel(c: WorkerCompetency) {
+  if (!c.expiring_soon) return null
+  return (
+    <span className="text-xs font-medium text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full">
+      Expiring soon
+    </span>
+  )
+}
+
 type Props = {
   competency: WorkerCompetency
 }
@@ -56,7 +65,10 @@ export function CompetencyCard({ competency: c }: Props) {
           {LABEL[c.status]}
         </span>
       </div>
-      <p className="text-xs text-gray-400 mt-2">{dateLine(c)}</p>
+      <div className="flex items-center gap-2 mt-2">
+        <p className="text-xs text-gray-400">{dateLine(c)}</p>
+        {expiringSoonLabel(c)}
+      </div>
       {showCta && (
         <Link
           href={`/module/${c.id}`}
