@@ -82,13 +82,14 @@ export default function LoginPage() {
               type="password"
               required
               autoComplete="current-password"
+              aria-describedby={error ? "form-error" : undefined}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="w-full h-10 px-3 rounded-lg border border-gray-300 bg-white text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent"
             />
           </div>
 
-          {error && <p className="text-red-600 text-xs">{error}</p>}
+          {error && <p id="form-error" role="alert" className="text-red-600 text-xs">{error}</p>}
 
           <button
             type="submit"
