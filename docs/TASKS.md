@@ -50,19 +50,21 @@ Track build progress here. Check off each item as it is completed.
 
 ---
 
-## 5. Worker Dashboard (`/dashboard`) ← NEXT UP
+## 5. Worker Dashboard (`/dashboard`) ✅ COMPLETE (2026-06-07)
 
-- [ ] Header: worker name, cadre, facility, ward
-- [ ] Summary row: X of 6 complete, Y overdue, Z not started
-- [ ] Competency list with per-item status badge (Complete / In Progress / Overdue / Not Started)
-- [ ] Per-item: last completed date and expiry date
-- [ ] CTA button: "Start" or "Continue" linking to module view
-- [ ] Overdue items visually distinct (red indicator)
-- [ ] Data fetched from Supabase via `/lib` — no hardcoded values in component
+- [x] Header: worker name, cadre, facility, ward
+- [x] Summary row: X of 6 complete, Y overdue, Z not started
+- [x] Competency list with per-item status badge (Complete / In Progress / Overdue / Not Started)
+- [x] Per-item: last completed date and expiry date
+- [x] CTA button: "Start" or "Continue" linking to module view
+- [x] Overdue items visually distinct (red indicator)
+- [x] Data fetched from Supabase via `/lib` — no hardcoded values in component
+
+**Key files:** `app/dashboard/page.tsx`, `app/dashboard/actions.ts`, `lib/dashboard.ts`, `lib/format.ts`, `components/dashboard/summary-card.tsx`, `components/dashboard/competency-card.tsx`
 
 ---
 
-## 6. Module View (`/module/[id]`)
+## 6. Module View (`/module/[id]`) ← NEXT UP
 
 - [ ] Module title and estimated completion time
 - [ ] Section progress indicator (e.g. Section 2 of 5)
