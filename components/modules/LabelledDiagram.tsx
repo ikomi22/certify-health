@@ -1,7 +1,7 @@
 // components/modules/LabelledDiagram.tsx
 "use client"
 
-import { useState, useEffect, useCallback } from "react"
+import { useState, useEffect, useRef } from "react"
 import type { ComponentType } from "react"
 import type { DiagramHotspot } from "@/lib/modules/types"
 
@@ -16,18 +16,19 @@ export function LabelledDiagram({ svg: SvgComponent, hotspots, onComplete }: Pro
   const [active, setActive] = useState<string | null>(null)
   const [pulsedAll, setPulsedAll] = useState(false)
 
-  const handleComplete = useCallback(onComplete, [onComplete])
+  const onCompleteRef = useRef(onComplete)
+  onCompleteRef.current = onComplete
 
   useEffect(() => {
     if (hotspots.length > 0 && visited.size === hotspots.length && !pulsedAll) {
       setPulsedAll(true)
       const t = setTimeout(() => {
         setPulsedAll(false)
-        handleComplete()
+        onCompleteRef.current()
       }, 1000)
       return () => clearTimeout(t)
     }
-  }, [visited.size, hotspots.length, pulsedAll, handleComplete])
+  }, [visited.size, hotspots.length, pulsedAll])
 
   function tap(id: string) {
     setVisited((prev) => {

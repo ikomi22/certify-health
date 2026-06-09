@@ -22,6 +22,7 @@ export function ReflectivePrompt({ question, minimumChars = 20, onComplete }: Pr
     const v = e.target.value
     if (!labelPulsed && v.length === 1) {
       setLabelPulsed(true)
+      setTimeout(() => setLabelPulsed(false), 1400)
     }
     setValue(v)
     if (v.length >= minimumChars && !completed) {
@@ -37,10 +38,9 @@ export function ReflectivePrompt({ question, minimumChars = 20, onComplete }: Pr
   return (
     <div className="bg-amber-50/60 ring-1 ring-amber-200/60 rounded-2xl p-5 space-y-4">
       <p
-        className={`text-amber-600 text-xs font-semibold tracking-widest transition-all ${
+        className={`text-amber-600 text-xs font-semibold tracking-widest ${
           labelPulsed ? "animate-pulse" : ""
         }`}
-        onAnimationEnd={() => setLabelPulsed(false)}
       >
         REFLECT
       </p>
