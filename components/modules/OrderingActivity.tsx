@@ -126,14 +126,14 @@ export function OrderingActivity({ items, correctOrder, onComplete }: Props) {
                   <button
                     onClick={() => moveUp(i)}
                     disabled={i === 0}
-                    className="w-8 h-8 flex items-center justify-center rounded-lg text-gray-400 hover:text-gray-700 hover:bg-gray-100 disabled:opacity-30 transition-colors"
+                    className="w-11 h-11 flex items-center justify-center rounded-lg text-gray-400 hover:text-gray-700 hover:bg-gray-100 disabled:opacity-30 transition-colors"
                   >
                     ↑
                   </button>
                   <button
                     onClick={() => moveDown(i)}
                     disabled={i === displayItems.length - 1}
-                    className="w-8 h-8 flex items-center justify-center rounded-lg text-gray-400 hover:text-gray-700 hover:bg-gray-100 disabled:opacity-30 transition-colors"
+                    className="w-11 h-11 flex items-center justify-center rounded-lg text-gray-400 hover:text-gray-700 hover:bg-gray-100 disabled:opacity-30 transition-colors"
                   >
                     ↓
                   </button>
