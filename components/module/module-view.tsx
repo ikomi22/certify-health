@@ -1,11 +1,19 @@
+// components/module/module-view.tsx
 "use client"
 
 import { useState } from "react"
 import Link from "next/link"
 import type { AssessmentQuestion, ModuleSection } from "@/lib/module"
 import type { ModuleIntro } from "@/lib/module-content"
+import type { InteractiveContent } from "@/lib/modules/types"
+import { ProgressBar } from "@/components/modules/ProgressBar"
+import { SectionRenderer } from "@/components/modules/SectionRenderer"
+import { CompletionScreen } from "@/components/modules/CompletionScreen"
 
 const PASS_THRESHOLD = 80
+
+const CPR_NOTE =
+  "You have completed the CPR Practical Preparation module. Your next step is to book a practical sign-off session with a certified assessor. Present this certificate as evidence of your theory preparation."
 
 type Phase = "intro" | "section" | "assessment" | "result"
 
@@ -22,6 +30,7 @@ type Props = {
   moduleIntro: ModuleIntro | null
   workerName: string
   facilityName: string
+  interactiveContent?: InteractiveContent | null
   onRecordAttempt: (
     competencyId: string,
     validityMonths: number,
@@ -36,7 +45,7 @@ export function ModuleView({
   questions,
   moduleIntro,
   workerName,
-  facilityName,
+  interactiveContent,
   onRecordAttempt,
 }: Props) {
   const [phase, setPhase] = useState<Phase>("intro")
@@ -58,13 +67,16 @@ export function ModuleView({
   const [completedAnswers, setCompletedAnswers] = useState<number[]>([])
   const [submitting, setSubmitting] = useState(false)
 
-  const hasSections = sections.length > 0
+  const interactive = interactiveContent ?? null
+  const sectionCount = interactive ? interactive.sections.length : sections.length
+  const hasSections = interactive ? interactive.sections.length > 0 : sections.length > 0
+  const isLastSection = currentSection === sectionCount - 1
   const question = questions[currentQ]
   const isLastQuestion = currentQ === questions.length - 1
-  const isLastSection = currentSection === sections.length - 1
   const section = sections[currentSection]
 
-  const isCheckedCorrect = checkedAnswer !== null && question !== undefined && checkedAnswer === question.correct_index
+  const isCheckedCorrect =
+    checkedAnswer !== null && question !== undefined && checkedAnswer === question.correct_index
   const isForced = attemptsOnCurrent >= 2
   const explanation = question && moduleIntro?.explanations[question.question_order]
 
@@ -146,45 +158,16 @@ export function ModuleView({
     setShowFeedback(false)
   }
 
-  function printCertificate() {
-    window.print()
-  }
-
   const correctCount =
     passed !== null
       ? completedAnswers.filter((ans, i) => ans === questions[i].correct_index).length
       : 0
 
-  return (
-    <div className="min-h-screen bg-gray-50 print:bg-white">
-      {/* Certificate — only visible when printing, only rendered when passed */}
-      {passed === true && (
-        <div className="hidden print:block p-12 max-w-2xl mx-auto">
-          <div className="border-4 border-green-700 p-10 text-center space-y-6">
-            <div>
-              <span className="font-extrabold text-3xl text-green-900 tracking-tight">Certify</span>
-              <span className="font-extrabold text-3xl text-green-600 tracking-tight ml-1.5">Health</span>
-            </div>
-            <p className="text-sm text-gray-500 uppercase tracking-widest">Certificate of Competency</p>
-            <p className="text-xl font-semibold text-gray-900">{workerName}</p>
-            <p className="text-sm text-gray-500">has successfully completed</p>
-            <p className="text-lg font-bold text-green-800">{competency.title}</p>
-            <p className="text-sm text-gray-500">{facilityName}</p>
-            <div className="flex justify-center gap-12 pt-4 text-sm text-gray-600">
-              <div>
-                <p className="font-medium">Completed</p>
-                <p>{completionDate}</p>
-              </div>
-              <div>
-                <p className="font-medium">Valid until</p>
-                <p>{expiryDate}</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+  const isCprModule = competency.title.toLowerCase().includes("cpr")
+  const bgClass = interactive ? "bg-[#fffbf5]" : "bg-gray-50"
 
-      {/* Normal UI — hidden when printing */}
+  return (
+    <div className={`min-h-screen ${bgClass} print:bg-white`}>
       <div className="print:hidden">
         {/* Header */}
         <header className="bg-green-950 text-white px-4 py-4">
@@ -194,31 +177,30 @@ export function ModuleView({
           <h1 className="text-base font-semibold mt-2 leading-snug">{competency.title}</h1>
           <div className="flex items-center gap-3 mt-1">
             <p className="text-xs text-green-400">{competency.estimated_minutes} min estimated</p>
-            {phase === "section" && hasSections && (
-              <p className="text-xs text-green-400">
-                Section {currentSection + 1} of {sections.length}
-              </p>
-            )}
             {phase === "assessment" && (
               <p className="text-xs text-green-400">
                 Question {currentQ + 1} of {questions.length}
               </p>
             )}
           </div>
-          {(phase === "section" || phase === "assessment") && (
+          {phase === "assessment" && (
             <div className="mt-2 h-1 bg-white/20 rounded-full overflow-hidden">
               <div
                 className="h-full bg-[#4ade80] rounded-full transition-all"
-                style={{
-                  width:
-                    phase === "section"
-                      ? `${((currentSection + 1) / sections.length) * 50}%`
-                      : `${50 + ((currentQ + 1) / questions.length) * 50}%`,
-                }}
+                style={{ width: `${((currentQ + 1) / questions.length) * 100}%` }}
               />
             </div>
           )}
         </header>
+
+        {/* Interactive progress bar — shown during interactive section phase */}
+        {interactive && phase === "section" && (
+          <ProgressBar
+            currentSection={currentSection + 1}
+            totalSections={sectionCount}
+            moduleName={competency.title}
+          />
+        )}
 
         <main className="max-w-xl mx-auto px-4 py-6 space-y-4">
 
@@ -227,7 +209,7 @@ export function ModuleView({
             <div className="space-y-4">
               {moduleIntro ? (
                 <>
-                  <div className="bg-white rounded-xl shadow-sm p-5">
+                  <div className="bg-white rounded-2xl shadow-sm ring-1 ring-black/5 p-5">
                     <h2 className="text-sm font-semibold text-gray-700 mb-3">What you will learn</h2>
                     <ul className="space-y-2">
                       {moduleIntro.objectives.map((obj, i) => (
@@ -238,29 +220,46 @@ export function ModuleView({
                       ))}
                     </ul>
                   </div>
-                  <div className="bg-green-50 border border-green-100 rounded-xl p-5">
+                  <div className="bg-green-50 border border-green-100 rounded-2xl p-5">
                     <h2 className="text-sm font-semibold text-green-800 mb-2">Why this matters</h2>
                     <p className="text-sm text-green-700 leading-relaxed">{moduleIntro.why_matters}</p>
                   </div>
                 </>
               ) : competency.description ? (
-                <div className="bg-white rounded-xl shadow-sm p-5">
+                <div className="bg-white rounded-2xl shadow-sm ring-1 ring-black/5 p-5">
                   <p className="text-sm text-gray-600">{competency.description}</p>
                 </div>
               ) : null}
               <button
                 onClick={hasSections ? startSections : startAssessment}
-                className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold text-sm py-3 rounded-xl transition-colors"
+                className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold text-sm py-4 rounded-xl transition-colors"
               >
                 Begin →
               </button>
             </div>
           )}
 
-          {/* Section phase */}
-          {phase === "section" && section && (
+          {/* Interactive section phase */}
+          {phase === "section" && interactive && (
+            <div key={currentSection} className="animate-slideInRight">
+              <SectionRenderer
+                section={interactive.sections[currentSection]}
+                isLast={isLastSection}
+                onSectionComplete={() => {
+                  if (isLastSection) {
+                    startAssessment()
+                  } else {
+                    setCurrentSection((s) => s + 1)
+                  }
+                }}
+              />
+            </div>
+          )}
+
+          {/* Fallback text section phase */}
+          {phase === "section" && !interactive && section && (
             <div className="space-y-4">
-              <div className="bg-white rounded-xl shadow-sm p-5">
+              <div className="bg-white rounded-2xl shadow-sm p-5">
                 <p className="text-xs text-gray-400 mb-2">
                   Section {currentSection + 1} of {sections.length}
                 </p>
@@ -286,7 +285,7 @@ export function ModuleView({
 
           {/* Assessment phase */}
           {phase === "assessment" && question && (
-            <div className="bg-white rounded-xl shadow-sm p-5 space-y-5">
+            <div className="bg-white rounded-2xl shadow-sm ring-1 ring-black/5 p-5 space-y-5">
               <div>
                 <div className="flex justify-between text-xs text-gray-400 mb-1.5">
                   <span>Question {currentQ + 1} of {questions.length}</span>
@@ -306,7 +305,8 @@ export function ModuleView({
 
               <div className="space-y-2.5">
                 {question.options.map((opt, i) => {
-                  let style = "border-gray-200 text-gray-700 hover:border-gray-300 hover:bg-gray-50"
+                  let style =
+                    "border-gray-200 text-gray-700 hover:border-gray-300 hover:bg-gray-50"
                   if (showFeedback) {
                     if (i === question.correct_index) {
                       style = "border-green-600 bg-green-50 text-green-900 font-medium"
@@ -323,7 +323,7 @@ export function ModuleView({
                       key={i}
                       onClick={() => !showFeedback && setSelected(i)}
                       disabled={showFeedback}
-                      className={`w-full text-left text-sm px-4 py-3 rounded-lg border transition-colors ${style}`}
+                      className={`w-full text-left text-sm px-4 py-3 rounded-xl border transition-colors ${style}`}
                     >
                       {opt}
                     </button>
@@ -333,7 +333,7 @@ export function ModuleView({
 
               {showFeedback && (
                 <div
-                  className={`rounded-lg p-3 text-sm ${
+                  className={`rounded-xl p-3 text-sm ${
                     isCheckedCorrect ? "bg-green-50 text-green-800" : "bg-red-50 text-red-800"
                   }`}
                 >
@@ -366,11 +366,7 @@ export function ModuleView({
                   disabled={submitting}
                   className="w-full bg-green-600 hover:bg-green-700 disabled:opacity-60 text-white font-semibold text-sm py-3 rounded-xl transition-colors"
                 >
-                  {isLastQuestion
-                    ? submitting
-                      ? "Saving…"
-                      : "See Results"
-                    : "Next →"}
+                  {isLastQuestion ? (submitting ? "Saving…" : "See Results") : "Next →"}
                 </button>
               )}
 
@@ -385,72 +381,46 @@ export function ModuleView({
             </div>
           )}
 
-          {/* Result phase */}
-          {phase === "result" && score !== null && passed !== null && (
-            <div className="bg-white rounded-xl shadow-sm p-6 text-center space-y-4">
-              <div className={`text-4xl font-bold ${passed ? "text-green-600" : "text-red-500"}`}>
-                {score}%
-              </div>
+          {/* Result phase — pass */}
+          {phase === "result" && passed === true && completionDate && expiryDate && (
+            <CompletionScreen
+              workerName={workerName}
+              moduleName={competency.title}
+              completionDate={completionDate}
+              expiryDate={expiryDate}
+              specialNote={isCprModule ? CPR_NOTE : undefined}
+            />
+          )}
+
+          {/* Result phase — fail */}
+          {phase === "result" && passed === false && score !== null && (
+            <div className="bg-white rounded-2xl shadow-sm ring-1 ring-black/5 p-6 text-center space-y-4">
+              <div className="text-4xl font-bold text-red-500">{score}%</div>
               <div>
-                <p className="text-base font-semibold text-gray-900">
-                  {passed ? "Module Complete" : "Not quite there"}
-                </p>
+                <p className="text-base font-semibold text-gray-900">Not quite there</p>
                 <p className="text-sm text-gray-500 mt-1">
-                  {passed
-                    ? `${correctCount} of ${questions.length} correct — pass confirmed`
-                    : `You need ${PASS_THRESHOLD}% to pass. Review the module and try again.`}
+                  {correctCount} of {questions.length} correct — you need {PASS_THRESHOLD}% to pass. Review the module and try again.
                 </p>
               </div>
-
-              {passed && completionDate && expiryDate && (
-                <div className="flex justify-center gap-8 text-sm py-2">
-                  <div>
-                    <p className="text-xs text-gray-400">Completed</p>
-                    <p className="font-medium text-gray-700">{completionDate}</p>
-                  </div>
-                  <div>
-                    <p className="text-xs text-gray-400">Valid until</p>
-                    <p className="font-medium text-gray-700">{expiryDate}</p>
-                  </div>
-                </div>
-              )}
-
-              {passed ? (
-                <div className="space-y-2">
+              <div className="space-y-2">
+                <button
+                  onClick={startAssessment}
+                  className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold text-sm py-3 rounded-xl transition-colors"
+                >
+                  Try Again
+                </button>
+                {hasSections && (
                   <button
-                    onClick={printCertificate}
-                    className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold text-sm py-3 rounded-xl transition-colors"
+                    onClick={() => {
+                      setCurrentSection(0)
+                      setPhase("section")
+                    }}
+                    className="w-full text-sm text-gray-500 hover:text-gray-700 py-2 transition-colors"
                   >
-                    Download Certificate
+                    Review module content
                   </button>
-                  <Link
-                    href="/dashboard"
-                    className="block w-full text-center text-sm text-gray-500 hover:text-gray-700 py-2 transition-colors"
-                  >
-                    Return to Dashboard
-                  </Link>
-                </div>
-              ) : (
-                <div className="space-y-2">
-                  <button
-                    onClick={startAssessment}
-                    className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold text-sm py-3 rounded-xl transition-colors"
-                  >
-                    Try Again
-                  </button>
-                  {hasSections && (
-                    <button
-                      onClick={() => {
-                        setCurrentSection(0)
-                        setPhase("section")
-                      }}
-                      className="w-full text-sm text-gray-500 hover:text-gray-700 py-2 transition-colors"
-                    >
-                      Review module content
-                    </button>
-                  )}
-                </div>
-              )}
+                )}
+              </div>
             </div>
           )}
 
