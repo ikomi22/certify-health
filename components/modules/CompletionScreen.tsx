@@ -99,7 +99,8 @@ export function CompletionScreen({
         { align: "center" }
       )
 
-      doc.save(`${moduleName.replace(/\s+/g, "-").toLowerCase()}-certificate.pdf`)
+      const slug = moduleName.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")
+      doc.save(`${slug}-certificate.pdf`)
     } finally {
       setGenerating(false)
     }
