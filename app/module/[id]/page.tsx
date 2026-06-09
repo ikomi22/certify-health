@@ -37,8 +37,6 @@ export default async function ModulePage({ params }: Props) {
   const moduleIntro = getModuleIntro(moduleData.competency.title)
   const interactiveContent = getInteractiveContent(moduleData.competency.title)
   const workerName = profileResult.data?.full_name ?? ""
-  const facilityName =
-    (profileResult.data?.facilities as unknown as { name: string } | null)?.name ?? ""
 
   return (
     <ModuleView
@@ -47,7 +45,6 @@ export default async function ModulePage({ params }: Props) {
       questions={moduleData.questions}
       moduleIntro={moduleIntro}
       workerName={workerName}
-      facilityName={facilityName}
       interactiveContent={interactiveContent}
       onRecordAttempt={recordAttempt}
     />

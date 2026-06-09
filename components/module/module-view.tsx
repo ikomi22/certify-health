@@ -29,7 +29,6 @@ type Props = {
   questions: AssessmentQuestion[]
   moduleIntro: ModuleIntro | null
   workerName: string
-  facilityName: string
   interactiveContent?: InteractiveContent | null
   onRecordAttempt: (
     competencyId: string,
