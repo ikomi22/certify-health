@@ -5,14 +5,6 @@ import { getModuleData } from "@/lib/module"
 import { getModuleIntro } from "@/lib/module-content"
 import { ModuleView } from "@/components/module/module-view"
 import { recordAttempt } from "./actions"
-import { blsTheoryContent } from "@/lib/modules/bls-theory"
-
-function getInteractiveContent(title: string) {
-  const map: Record<string, typeof blsTheoryContent> = {
-    "Basic Life Support (BLS) — Theory": blsTheoryContent,
-  }
-  return map[title] ?? null
-}
 
 type Props = { params: { id: string } }
 
@@ -35,7 +27,6 @@ export default async function ModulePage({ params }: Props) {
   if (!moduleData) redirect("/dashboard")
 
   const moduleIntro = getModuleIntro(moduleData.competency.title)
-  const interactiveContent = getInteractiveContent(moduleData.competency.title)
   const workerName = profileResult.data?.full_name ?? ""
 
   return (
@@ -45,7 +36,6 @@ export default async function ModulePage({ params }: Props) {
       questions={moduleData.questions}
       moduleIntro={moduleIntro}
       workerName={workerName}
-      interactiveContent={interactiveContent}
       onRecordAttempt={recordAttempt}
     />
   )

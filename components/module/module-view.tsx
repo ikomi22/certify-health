@@ -6,9 +6,15 @@ import Link from "next/link"
 import type { AssessmentQuestion, ModuleSection } from "@/lib/module"
 import type { ModuleIntro } from "@/lib/module-content"
 import type { InteractiveContent } from "@/lib/modules/types"
+import { blsTheoryContent } from "@/lib/modules/bls-theory"
 import { ProgressBar } from "@/components/modules/ProgressBar"
 import { SectionRenderer } from "@/components/modules/SectionRenderer"
 import { CompletionScreen } from "@/components/modules/CompletionScreen"
+
+function getInteractiveContent(title: string): InteractiveContent | null {
+  if (title === "Basic Life Support (BLS) — Theory") return blsTheoryContent
+  return null
+}
 
 const PASS_THRESHOLD = 80
 
@@ -29,7 +35,6 @@ type Props = {
   questions: AssessmentQuestion[]
   moduleIntro: ModuleIntro | null
   workerName: string
-  interactiveContent?: InteractiveContent | null
   onRecordAttempt: (
     competencyId: string,
     validityMonths: number,
@@ -44,7 +49,6 @@ export function ModuleView({
   questions,
   moduleIntro,
   workerName,
-  interactiveContent,
   onRecordAttempt,
 }: Props) {
   const [phase, setPhase] = useState<Phase>("intro")
@@ -66,7 +70,7 @@ export function ModuleView({
   const [completedAnswers, setCompletedAnswers] = useState<number[]>([])
   const [submitting, setSubmitting] = useState(false)
 
-  const interactive = interactiveContent ?? null
+  const interactive = getInteractiveContent(competency.title)
   const sectionCount = interactive ? interactive.sections.length : sections.length
   const hasSections = interactive ? interactive.sections.length > 0 : sections.length > 0
   const isLastSection = currentSection === sectionCount - 1
