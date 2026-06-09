@@ -19,10 +19,12 @@ export function LabelledDiagram({ svg: SvgComponent, hotspots, onComplete }: Pro
   const handleComplete = useCallback(onComplete, [onComplete])
 
   useEffect(() => {
-    if (visited.size === hotspots.length && !pulsedAll) {
+    if (hotspots.length > 0 && visited.size === hotspots.length && !pulsedAll) {
       setPulsedAll(true)
-      handleComplete()
-      const t = setTimeout(() => setPulsedAll(false), 1000)
+      const t = setTimeout(() => {
+        setPulsedAll(false)
+        handleComplete()
+      }, 1000)
       return () => clearTimeout(t)
     }
   }, [visited.size, hotspots.length, pulsedAll, handleComplete])
