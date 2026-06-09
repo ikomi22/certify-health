@@ -1,5 +1,5 @@
 // lib/modules/types.ts
-import type { ReactNode } from "react"
+import type { ComponentType } from "react"
 
 export type RevealCardBlock = {
   type: "reveal-cards"
@@ -57,7 +57,7 @@ export type DiagramHotspot = {
 
 export type LabelledDiagramBlock = {
   type: "labelled-diagram"
-  svg: ReactNode
+  svg: ComponentType
   hotspots: DiagramHotspot[]
 }
 
