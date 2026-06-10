@@ -29,8 +29,8 @@ async function main() {
       user_id: admin.id,
       competency_id: compByTitle["Infection Prevention and Control"]?.id,
       status: "complete",
-      completed_at: new Date(now.getTime() - 300 * 24 * 60 * 60 * 1000).toISOString(),
-      expires_at: new Date(now.getTime() + 65 * 24 * 60 * 60 * 1000).toISOString(),
+      completed_at: new Date(now.getTime() - 335 * 24 * 60 * 60 * 1000).toISOString(),
+      expires_at: new Date(now.getTime() + 20 * 24 * 60 * 60 * 1000).toISOString(),
     },
     {
       user_id: admin.id,

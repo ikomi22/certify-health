@@ -14,21 +14,17 @@ type Props = {
 export function LabelledDiagram({ svg: SvgComponent, hotspots, onComplete }: Props) {
   const [visited, setVisited] = useState<Set<string>>(new Set())
   const [active, setActive] = useState<string | null>(null)
-  const [pulsedAll, setPulsedAll] = useState(false)
+  const [done, setDone] = useState(false)
 
   const onCompleteRef = useRef(onComplete)
   onCompleteRef.current = onComplete
 
   useEffect(() => {
-    if (hotspots.length > 0 && visited.size === hotspots.length && !pulsedAll) {
-      setPulsedAll(true)
-      const t = setTimeout(() => {
-        setPulsedAll(false)
-        onCompleteRef.current()
-      }, 1000)
-      return () => clearTimeout(t)
+    if (!done && hotspots.length > 0 && visited.size === hotspots.length) {
+      setDone(true)
+      onCompleteRef.current()
     }
-  }, [visited.size, hotspots.length, pulsedAll])
+  }, [visited.size, hotspots.length, done])
 
   function tap(id: string) {
     setVisited((prev) => {
@@ -56,12 +52,8 @@ export function LabelledDiagram({ svg: SvgComponent, hotspots, onComplete }: Pro
               className="absolute -translate-x-1/2 -translate-y-1/2 w-11 h-11 flex items-center justify-center"
               aria-label={h.label}
             >
-              {(!isVisited || pulsedAll) && (
-                <span
-                  className={`absolute inline-flex h-5 w-5 rounded-full opacity-60 animate-ping ${
-                    pulsedAll ? "bg-green-500" : "bg-green-400"
-                  }`}
-                />
+              {!isVisited && (
+                <span className="absolute inline-flex h-5 w-5 rounded-full opacity-60 animate-ping bg-green-400" />
               )}
               <span className="relative inline-flex h-4 w-4 rounded-full border-2 border-white bg-green-500 shadow" />
             </button>

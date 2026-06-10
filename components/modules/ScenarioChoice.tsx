@@ -65,12 +65,12 @@ export function ScenarioChoice({ scenario, choices, onComplete }: Props) {
               key={i}
               onClick={() => choose(i)}
               disabled={selected !== null}
-              className={`w-full text-left px-4 py-4 rounded-xl ring-1 text-sm transition-all min-h-[52px] ${
+              className={`w-full text-left px-4 py-4 rounded-xl text-sm transition-all min-h-[52px] text-gray-800 ${
                 isSelected
-                  ? "ring-amber-400 bg-amber-50"
+                  ? "ring-1 ring-amber-400 bg-amber-50"
                   : isDimmed
-                  ? "ring-gray-100 opacity-50"
-                  : "ring-gray-200 bg-white hover:shadow-md hover:-translate-y-px"
+                  ? "ring-1 ring-gray-200 bg-white opacity-50"
+                  : "border border-gray-300 bg-white shadow-sm hover:border-green-500 hover:shadow-md hover:-translate-y-px"
               }`}
             >
               <span className="text-gray-400 text-xs mr-2">

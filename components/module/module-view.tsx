@@ -7,13 +7,27 @@ import type { AssessmentQuestion, ModuleSection } from "@/lib/module"
 import type { ModuleIntro } from "@/lib/module-content"
 import type { InteractiveContent } from "@/lib/modules/types"
 import { blsTheoryContent } from "@/lib/modules/bls-theory"
+import { ipcContent } from "@/lib/modules/ipc"
+import { safeguardingContent } from "@/lib/modules/safeguarding"
+import { medicinesContent } from "@/lib/modules/medicines"
+import { healthSafetyContent } from "@/lib/modules/health-safety"
+import { manualHandlingContent } from "@/lib/modules/manual-handling"
+import { cprContent } from "@/lib/modules/cpr"
 import { ProgressBar } from "@/components/modules/ProgressBar"
 import { SectionRenderer } from "@/components/modules/SectionRenderer"
 import { CompletionScreen } from "@/components/modules/CompletionScreen"
 
 function getInteractiveContent(title: string): InteractiveContent | null {
-  if (title === "Basic Life Support (BLS) — Theory") return blsTheoryContent
-  return null
+  switch (title) {
+    case "Basic Life Support (BLS) — Theory":           return blsTheoryContent
+    case "Infection Prevention and Control":             return ipcContent
+    case "Safeguarding Awareness":                       return safeguardingContent
+    case "Medicines Management — Fundamentals":          return medicinesContent
+    case "Health and Safety Awareness":                  return healthSafetyContent
+    case "Manual Handling — Theory":                     return manualHandlingContent
+    case "Cardiopulmonary Resuscitation (CPR) — Practical Preparation": return cprContent
+    default:                                             return null
+  }
 }
 
 const PASS_THRESHOLD = 80

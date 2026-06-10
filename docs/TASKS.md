@@ -111,28 +111,26 @@ All 8 components built in `components/modules/`:
 - [x] Filter by cadre and "Overdue only"
 - [x] Short code legend (BLS, IPC, SGA, MMF, HSA, MHT, CPR)
 - [x] Export CSV
-- [ ] **BUG: staff table columns truncated at 390px** — only "BL" column visible, others cut off. Needs horizontal scroll or responsive collapse.
+- [x] **BUG fixed: staff table columns truncated at 390px** — added `min-w-[640px]` to table so `overflow-x-auto` wrapper kicks in correctly.
 
 ---
 
-## 10. Remaining Modules — NOT STARTED
+## 10. Remaining Modules ✅
 
-Per `INTERACTION_DESIGN.md`, 6 modules still need interactive content built. BLS is the template.
+All 6 modules built in `lib/modules/` and wired into `getInteractiveContent()` in `components/module/module-view.tsx`.
 
-- [ ] Module 2: Infection Prevention and Control
-- [ ] Module 3: Safeguarding Awareness
-- [ ] Module 4: Medicines Management — Fundamentals
-- [ ] Module 5: Health and Safety Awareness
-- [ ] Module 6: Manual Handling — Theory
-- [ ] Module 7: CPR — Practical Preparation
-
-Each module: create `lib/modules/[slug].tsx` with sections per `INTERACTION_DESIGN.md` spec, wire into `getInteractiveContent()` in `components/module/module-view.tsx`.
+- [x] Module 2: Infection Prevention and Control (`lib/modules/ipc.tsx`)
+- [x] Module 3: Safeguarding Awareness (`lib/modules/safeguarding.tsx`)
+- [x] Module 4: Medicines Management — Fundamentals (`lib/modules/medicines.tsx`)
+- [x] Module 5: Health and Safety Awareness (`lib/modules/health-safety.tsx`)
+- [x] Module 6: Manual Handling — Theory (`lib/modules/manual-handling.tsx`)
+- [x] Module 7: CPR — Practical Preparation (`lib/modules/cpr.tsx`)
 
 ---
 
 ## 11. Seed Data — Gaps
 
-- [ ] Hauwa Ibrahim's personal competency record — seed at least 2 complete, 1 expiring soon, 1 not started so her "My Compliance" view is realistic
+- [x] Hauwa Ibrahim's personal competency record — IPC (complete, expires in 20 days), Safeguarding (complete), BLS (overdue), remaining 4 as not_started
 - [ ] Review expiry dates across all staff — vary them, ensure at least 3 are expiring within 90 days
 
 ---
@@ -142,13 +140,13 @@ Each module: create `lib/modules/[slug].tsx` with sections per `INTERACTION_DESI
 - [x] Login page — confirmed at 390px
 - [x] Worker dashboard — confirmed at 390px (screenshots verified)
 - [x] Module view — confirmed at 390px
-- [ ] Facility dashboard — **broken at 390px** (staff table truncation, see section 9)
+- [x] Facility dashboard — mobile table fix applied
 
 ---
 
 ## 13. Design & Polish
 
-- [ ] Fix facility dashboard staff table at mobile width (Section 9 bug)
+- [x] Fix facility dashboard staff table at mobile width (Section 9 bug)
 - [ ] Page titles set in metadata (currently blank)
 - [ ] Loading states on dashboard and facility (currently blank during Supabase fetch)
 - [ ] Certificate accessible from worker dashboard (not just CompletionScreen)

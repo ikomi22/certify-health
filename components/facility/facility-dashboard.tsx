@@ -186,7 +186,7 @@ export function FacilityDashboard({ data }: Props) {
           </div>
 
           <div className="overflow-x-auto">
-            <table className="w-full text-xs">
+            <table className="min-w-[640px] w-full text-xs">
               <thead>
                 <tr className="border-b border-gray-100 bg-gray-50">
                   <th className="text-left px-4 py-2.5 font-medium text-gray-500 whitespace-nowrap">Name</th>
