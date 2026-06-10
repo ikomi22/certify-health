@@ -2,9 +2,11 @@
 
 Track build progress here. Check off each item as it is completed.
 
+**Session discipline:** Read `CLAUDE.md` + this file at the start of every session. Update checkboxes and commit at the end.
+
 ---
 
-## 1. Project Setup
+## 1. Project Setup ✅
 
 - [x] Initialise Next.js 14 project with TypeScript and App Router
 - [x] Configure Tailwind CSS
@@ -14,7 +16,7 @@ Track build progress here. Check off each item as it is completed.
 
 ---
 
-## 2. Supabase Setup
+## 2. Supabase Setup ✅
 
 - [x] Create Supabase project
 - [x] Run docs/schema.sql in Supabase SQL editor
@@ -23,138 +25,167 @@ Track build progress here. Check off each item as it is completed.
 
 ---
 
-## 3. Seed Data
+## 3. Seed Data ✅
 
 - [x] Seed facility: Federal Medical Centre, Asaba, Delta State
-- [x] Seed 6 competencies
-- [x] Seed demo worker account: Adaeze Okonkwo (Registered Nurse, Medical Ward B)
-- [x] Seed 20 staff members across Registered Nurse, Midwife, and CHEW cadres
-- [x] Seed BLS Theory module content (5 sections)
-- [x] Seed BLS Theory assessment questions (7 multiple choice)
+- [x] Seed 7 competencies (incl. CPR — Practical Preparation)
+- [x] Seed demo worker: Adaeze Okonkwo (Registered Nurse, Medical Ward B)
+- [x] Seed 20 staff members across Registered Nurse, Midwife, CHEW cadres
+- [x] Seed BLS Theory module sections and assessment questions (7 MCQ)
+- [x] Seed assessment questions for all remaining 6 competencies
 
 ---
 
-## 4. Authentication ✅ COMPLETE (2026-06-07)
+## 4. Authentication ✅
 
-- [x] Login page (`/app/login`) — email + password form, Deep Forest design (#052e16 bg)
+- [x] Login page (`/app/login`) — Deep Forest design, email + password form
 - [x] Demo buttons — one-click login as Adaeze (worker) or Hauwa Ibrahim (admin)
-- [x] Redirect worker to `/dashboard` on login
-- [x] Redirect admin/matron to `/facility` on login
-- [x] Protect routes — unauthenticated users redirected to `/login`
-- [x] Authenticated users redirected away from `/login` back to `/dashboard`
-- [x] Session handling via Supabase Auth helpers for Next.js (`@supabase/ssr`)
-- [x] Middleware-based route protection (`middleware.ts` at project root)
+- [x] Worker → `/dashboard`, admin → `/select-role` on login
+- [x] Role picker screen (`/select-role`) — My Compliance vs Facility Overview
+- [x] Persistent role toggle nav — tab switch between views without returning to picker
+- [x] Route protection — unauthenticated users redirected to `/login`
 
-**Key files:** `middleware.ts`, `lib/supabase/middleware.ts`, `app/login/page.tsx`, `app/login/actions.ts`
 **Demo credentials:** adaeze.okonkwo@fmcasaba.gov.ng / matron.ibrahim@fmcasaba.gov.ng — password: `CertifyDemo2026!`
 
 ---
 
-## 5. Worker Dashboard (`/dashboard`) ✅ COMPLETE (2026-06-07)
+## 5. Worker Dashboard (`/dashboard`) ✅
 
 - [x] Header: worker name, cadre, facility, ward
-- [x] Summary row: X of 6 complete, Y overdue, Z not started
-- [x] Competency list with per-item status badge (Complete / In Progress / Overdue / Not Started)
-- [x] Per-item: last completed date and expiry date
-- [x] CTA button: "Start" or "Continue" linking to module view
-- [x] Overdue items visually distinct (red indicator)
-- [x] Data fetched from Supabase via `/lib` — no hardcoded values in component
-
-**Key files:** `app/dashboard/page.tsx`, `app/dashboard/actions.ts`, `lib/dashboard.ts`, `lib/format.ts`, `components/dashboard/summary-card.tsx`, `components/dashboard/competency-card.tsx`
+- [x] Summary row: X of 7 complete, Y overdue, Z not started
+- [x] Competency list — status badge, last completed date, expiry date
+- [x] Overdue banner: "Complete this now to stay compliant" (no false email claim)
+- [x] CTA: "Start Module →" links to module view
 
 ---
 
-## 6. Module View (`/module/[id]`) ✅ COMPLETE (2026-06-07)
+## 6. BLS Theory Module — Interactive ✅
 
-Design simplified: YouTube video embed per competency → assessment → result (no section-by-section content).
+Rebuilt from YouTube embed to full interactive component library per `INTERACTION_DESIGN.md`.
 
-- [x] Module title and estimated completion time in header
-- [x] YouTube video embed (16:9, fullscreen capable)
-- [x] "Take Assessment" CTA after video
-- [x] Assessment — multiple choice questions, one at a time with progress bar
-- [x] Score calculation on submission
-- [x] Pass/fail logic (pass threshold: 80%)
-- [x] Completion screen on pass: score + "Back to Dashboard"
-- [x] Fail screen: score shown, option to retake or rewatch video
-- [x] On pass: update `worker_competencies` status to complete in Supabase + insert assessment_attempt
+- [x] Module intro screen — learning objectives, why this matters, Begin button
+- [x] Section progress bar — "Section X of 5", fills as sections complete
+- [x] Section 1: Chain of Survival — RevealCard (4 cards) + KnowledgeCheck
+- [x] Section 2: Recognising Cardiac Arrest — Text + KnowledgeCheck
+- [x] Section 3: CPR Technique — RevealCard (3 cards) + OrderingActivity
+- [x] Section 4: AED and Team Resuscitation — LabelledDiagram (SVG) + ReflectivePrompt
+- [x] Section 5: Clinical Scenario — ScenarioChoice (3 options)
+- [x] All sections gate Continue until interaction complete
+- [x] Assessment — 7 MCQ, 80% pass, feedback per question, max 2 attempts then reveal
+- [x] CompletionScreen — animated checkmark, score, PDF certificate download (jsPDF)
+- [x] Fail screen — score shown, retake or review content
 
-**YouTube video IDs:** Add to `lib/module-videos.ts` before the demo — one per competency.
-**Key files:** `app/module/[id]/page.tsx`, `app/module/[id]/actions.ts`, `lib/module.ts`, `lib/module-videos.ts`, `components/module/module-view.tsx`
-
----
-
-## 7. Certificate
-
-- [ ] Decide format: PDF download or shareable link (confirm with Michael)
-- [ ] Generate certificate on pass with: worker name, competency title, date, facility
-- [ ] Certificate accessible from completion screen and from dashboard
+**Key files:** `lib/modules/bls-theory.tsx`, `lib/modules/types.ts`, `components/module/module-view.tsx`, `components/modules/`
 
 ---
 
-## 8. Facility Dashboard (`/facility`) ✅ COMPLETE (2026-06-07)
+## 7. Interactive Component Library ✅
 
-- [x] Facility name header: Federal Medical Centre, Asaba
-- [x] Overall compliance rate — % of all staff × competency pairs that are complete
-- [x] Stat cards: total staff, fully compliant, overall rate
+All 8 components built in `components/modules/`:
+
+- [x] RevealCard — tap to expand, green border on open, Continue after all opened
+- [x] KnowledgeCheck — inline MCQ, immediate feedback, Continue after answered
+- [x] ScenarioChoice — amber scenario card, consequence panel, no retry
+- [x] OrderingActivity — drag (desktop) / arrow buttons (mobile), Check Order, Show Answer
+- [x] ReflectivePrompt — open text, 20 char minimum, not assessed
+- [x] LabelledDiagram — pulsing hotspots, tap to reveal panel, Continue after all visited
+- [x] ProgressBar — fixed below header, Section X of Y, proportional fill
+- [x] CompletionScreen — SVG checkmark draw animation, PDF certificate, Return to Dashboard
+
+---
+
+## 8. Certificate ✅
+
+- [x] PDF generated client-side via jsPDF on CompletionScreen
+- [x] Contains: worker name, module name, completion date, expiry date, facility, green border
+- [x] CPR module has custom completion note about practical sign-off
+- [ ] Certificate accessible from dashboard (currently only from CompletionScreen)
+
+---
+
+## 9. Facility Dashboard (`/facility`) ✅
+
+- [x] Facility name header, stat cards (total staff, fully compliant, overall rate)
 - [x] Competency breakdown — progress bars sorted by most gaps
-- [x] Staff list table: name, cadre, RAG dot per competency
-- [x] Filter by cadre (All / Registered Nurse / Midwife / CHEW)
-- [x] RAG indicators: green = complete, amber = in progress, red = overdue, grey = not started
-- [x] Export CSV — client-side download of full staff compliance table
-- [x] Data fetched from Supabase via `/lib/facility.ts`
-- [x] Workers redirected to `/dashboard` (role check in page.tsx)
-
-**Key files:** `app/facility/page.tsx`, `lib/facility.ts`, `components/facility/facility-dashboard.tsx`
-
-**Also seeded:** Assessment questions for all 5 remaining competencies (IPC, Safeguarding, Medicines, H&S, Manual Handling) via `scripts/seed-questions.ts`
+- [x] Staff table — name, cadre, RAG dot per competency
+- [x] Filter by cadre and "Overdue only"
+- [x] Short code legend (BLS, IPC, SGA, MMF, HSA, MHT, CPR)
+- [x] Export CSV
+- [ ] **BUG: staff table columns truncated at 390px** — only "BL" column visible, others cut off. Needs horizontal scroll or responsive collapse.
 
 ---
 
-## 9. Responsive Check
+## 10. Remaining Modules — NOT STARTED
 
-- [ ] Worker dashboard — tested at 390px (iPhone 14 viewport)
-- [ ] Module view — tested at 390px
-- [ ] Facility dashboard — tested at 390px (table scrollable or collapsed gracefully)
-- [x] Login page — tested at 390px (mobile-first layout confirmed)
+Per `INTERACTION_DESIGN.md`, 6 modules still need interactive content built. BLS is the template.
 
----
+- [ ] Module 2: Infection Prevention and Control
+- [ ] Module 3: Safeguarding Awareness
+- [ ] Module 4: Medicines Management — Fundamentals
+- [ ] Module 5: Health and Safety Awareness
+- [ ] Module 6: Manual Handling — Theory
+- [ ] Module 7: CPR — Practical Preparation
 
-## 10. Design & Polish
-
-- [x] Inter font loaded via Next.js
-- [ ] Primary colour: green (#16a34a) applied consistently
-- [ ] No lorem ipsum anywhere in the demo
-- [ ] Loading states on data-fetching views
-- [ ] Empty state handled (no blank screens)
-- [ ] Page titles set correctly in metadata
+Each module: create `lib/modules/[slug].tsx` with sections per `INTERACTION_DESIGN.md` spec, wire into `getInteractiveContent()` in `components/module/module-view.tsx`.
 
 ---
 
-## 11. Deployment
+## 11. Seed Data — Gaps
+
+- [ ] Hauwa Ibrahim's personal competency record — seed at least 2 complete, 1 expiring soon, 1 not started so her "My Compliance" view is realistic
+- [ ] Review expiry dates across all staff — vary them, ensure at least 3 are expiring within 90 days
+
+---
+
+## 12. Responsive Check
+
+- [x] Login page — confirmed at 390px
+- [x] Worker dashboard — confirmed at 390px (screenshots verified)
+- [x] Module view — confirmed at 390px
+- [ ] Facility dashboard — **broken at 390px** (staff table truncation, see section 9)
+
+---
+
+## 13. Design & Polish
+
+- [ ] Fix facility dashboard staff table at mobile width (Section 9 bug)
+- [ ] Page titles set in metadata (currently blank)
+- [ ] Loading states on dashboard and facility (currently blank during Supabase fetch)
+- [ ] Certificate accessible from worker dashboard (not just CompletionScreen)
+
+---
+
+## 14. Deployment
 
 - [ ] Connect repo to Vercel
 - [ ] Add environment variables to Vercel (Supabase URL, anon key)
-- [x] Confirm production build passes (`npm run build`)
+- [x] Production build passes (`npm run build`)
 - [ ] Verify deployed URL works end-to-end
-- [ ] Share URL with Michael for review
 
 ---
 
-## 12. Demo Walkthrough Test
+## 15. Demo Walkthrough Test
 
-- [ ] Walk through demo story in under 90 seconds:
-  1. Log in as Adaeze → worker dashboard shows her competency status
-  2. Click into BLS module → progress through sections → complete assessment
-  3. Log in as matron → facility dashboard shows team compliance at a glance
-- [ ] No broken links or blank screens during walkthrough
-- [ ] Data looks realistic — no placeholder text visible
-- [ ] Works reliably on Chrome on a laptop
+- [ ] 90-second story: login as Adaeze → dashboard → BLS module → complete → facility dashboard
+- [ ] No broken links or blank screens
+- [ ] Data looks realistic throughout
+
+---
+
+## Priority Order for Remaining Sessions
+
+1. **Fix facility table mobile** (Section 9/12/13) — 30 min, visible demo bug
+2. **Seed Hauwa's compliance record** (Section 11) — 15 min
+3. **Remaining modules** (Section 10) — one per session, IPC first
+4. **Polish + deploy** (Sections 13, 14) — after modules done
+5. **Walkthrough test** (Section 15) — final gate
 
 ---
 
 ## Resolved Decisions
 
-- **Certificate format:** Downloadable PDF
-- **Facility dashboard export:** Yes — CSV download of staff compliance table (added to section 8)
-- **Login approach:** Single login page with role-based routing — `role` field on user record redirects workers to `/dashboard` and admins/matrons to `/facility`
+- **Certificate format:** Downloadable PDF via jsPDF
+- **Facility dashboard export:** CSV download ✓
+- **Login approach:** Role-based routing — workers → dashboard, admins → select-role picker
 - **Platform name:** Certify Health
+- **Module design standard:** `INTERACTION_DESIGN.md` — Articulate Rise-style, all 8 component types
