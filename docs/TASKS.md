@@ -147,6 +147,8 @@ All 6 modules built in `lib/modules/` and wired into `getInteractiveContent()` i
 ## 13. Design & Polish
 
 - [x] Fix facility dashboard staff table at mobile width (Section 9 bug)
+- [x] Fix LabelledDiagram: `pulsedAll` in useEffect deps caused React cleanup to cancel completion timeout — Section 4 could never be completed. Replaced with `done` state.
+- [x] Fix ScenarioChoice: buttons were near-invisible (ring-gray-200 on cream bg) — replaced with border-gray-300 + shadow-sm + explicit text-gray-800
 - [ ] Page titles set in metadata (currently blank)
 - [ ] Loading states on dashboard and facility (currently blank during Supabase fetch)
 - [ ] Certificate accessible from worker dashboard (not just CompletionScreen)
@@ -172,11 +174,10 @@ All 6 modules built in `lib/modules/` and wired into `getInteractiveContent()` i
 
 ## Priority Order for Remaining Sessions
 
-1. **Fix facility table mobile** (Section 9/12/13) — 30 min, visible demo bug
-2. **Seed Hauwa's compliance record** (Section 11) — 15 min
-3. **Remaining modules** (Section 10) — one per session, IPC first
-4. **Polish + deploy** (Sections 13, 14) — after modules done
-5. **Walkthrough test** (Section 15) — final gate
+1. **Page titles + loading states** (Section 13) — 30 min polish
+2. **Certificate from dashboard** (Section 13) — small feature
+3. **Deploy to Vercel** (Section 14) — connect repo, add env vars, verify URL
+4. **Walkthrough test** (Section 15) — final gate before ministry demo
 
 ---
 
