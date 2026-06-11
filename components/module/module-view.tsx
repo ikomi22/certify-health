@@ -97,6 +97,22 @@ export function ModuleView({
   const isForced = attemptsOnCurrent >= 2
   const explanation = question && moduleIntro?.explanations[question.question_order]
 
+  function restart() {
+    setPhase("intro")
+    setCurrentSection(0)
+    setCurrentQ(0)
+    setFinalAnswers([])
+    setSelected(null)
+    setCheckedAnswer(null)
+    setAttemptsOnCurrent(0)
+    setShowFeedback(false)
+    setScore(null)
+    setPassed(null)
+    setCompletionDate(null)
+    setExpiryDate(null)
+    setCompletedAnswers([])
+  }
+
   function startSections() {
     setCurrentSection(0)
     setPhase("section")
@@ -406,6 +422,7 @@ export function ModuleView({
               completionDate={completionDate}
               expiryDate={expiryDate}
               specialNote={isCprModule ? CPR_NOTE : undefined}
+              onRetake={restart}
             />
           )}
 

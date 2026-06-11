@@ -10,6 +10,7 @@ type Props = {
   completionDate: string
   expiryDate: string
   specialNote?: string
+  onRetake?: () => void
 }
 
 export function CompletionScreen({
@@ -18,6 +19,7 @@ export function CompletionScreen({
   completionDate,
   expiryDate,
   specialNote,
+  onRetake,
 }: Props) {
   const router = useRouter()
   const [generating, setGenerating] = useState(false)
@@ -189,6 +191,14 @@ export function CompletionScreen({
         >
           Return to Dashboard →
         </button>
+        {onRetake && (
+          <button
+            onClick={onRetake}
+            className="w-full text-sm text-gray-400 hover:text-gray-600 py-2 transition-colors"
+          >
+            Retake module
+          </button>
+        )}
       </div>
     </div>
   )
