@@ -51,8 +51,15 @@ type Props = {
 }
 
 export function CompetencyCard({ competency: c }: Props) {
-  const showCta = c.status !== "complete"
-  const ctaLabel = c.status === "in_progress" ? "Continue →" : "Start Module →"
+  const ctaLabel =
+    c.status === "complete" ? "Retake →" :
+    c.status === "in_progress" ? "Continue →" :
+    "Start Module →"
+
+  const ctaStyle =
+    c.status === "complete"
+      ? "mt-3 block w-full text-center border border-gray-200 text-gray-500 hover:bg-gray-50 text-xs font-semibold py-2 rounded-lg transition-colors"
+      : "mt-3 block w-full text-center bg-brand hover:bg-brand-dark text-white text-xs font-semibold py-2 rounded-lg transition-colors"
 
   return (
     <div className={`bg-white rounded-xl border border-gray-100 border-l-4 ${BORDER[c.status]} p-4 shadow-sm`}>
@@ -69,14 +76,9 @@ export function CompetencyCard({ competency: c }: Props) {
         <p className="text-xs text-gray-400">{dateLine(c)}</p>
         {expiringSoonLabel(c)}
       </div>
-      {showCta && (
-        <Link
-          href={`/module/${c.id}`}
-          className="mt-3 block w-full text-center bg-brand hover:bg-brand-dark text-white text-xs font-semibold py-2 rounded-lg transition-colors"
-        >
-          {ctaLabel}
-        </Link>
-      )}
+      <Link href={`/module/${c.id}`} className={ctaStyle}>
+        {ctaLabel}
+      </Link>
     </div>
   )
 }
